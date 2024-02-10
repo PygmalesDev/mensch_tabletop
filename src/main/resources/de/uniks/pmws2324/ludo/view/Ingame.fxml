@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="839.0" prefWidth="839.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pmws2324.ludo.controller.IngameController">
+   <children>
+      <Canvas fx:id="backgroundCanvas" height="840.0" width="840.0" />
+      <Canvas fx:id="conesCanvas" height="840.0" width="840.0" />
+      <Canvas fx:id="animationsCanvas" height="840.0" width="840.0" />
+      <Canvas fx:id="mouseInteractionCanvas" height="840.0" width="840.0" />
+   </children>
+</Pane>

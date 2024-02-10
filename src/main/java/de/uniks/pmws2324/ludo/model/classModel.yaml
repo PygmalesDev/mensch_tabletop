@@ -1,0 +1,214 @@
+- c: 	org.fulib.classmodel.ClassModel
+  classes: 	position 	cone 	player
+  defaultCollectionType: 	c1
+  defaultPropertyStyle: 	Bean
+  defaultRoleType: 	"java.util.ArrayList<%s>"
+  mainJavaDir: 	"src/main/java"
+  packageName: 	de.uniks.pmws2324.ludo.model
+  packageSrcFolder: 	"src/main/java/de/uniks/pmws2324/ludo/model"
+
+- position: 	org.fulib.classmodel.Clazz
+  attributes: 	position_x 	position_y 	position_globalState 	position_localState 	position_condition
+  model: 	c
+  modified: 	false
+  name: 	Position
+  propertyStyle: 	Bean
+  roles: 	position_cone 	position_player 	position_initialPlayer
+
+- cone: 	org.fulib.classmodel.Clazz
+  attributes: 	cone_color 	cone_movingDirection 	cone_visible
+  model: 	c
+  modified: 	false
+  name: 	Cone
+  propertyStyle: 	Bean
+  roles: 	cone_position 	cone_player
+
+- player: 	org.fulib.classmodel.Clazz
+  attributes: 	player_name 	player_playerColor
+  model: 	c
+  modified: 	false
+  name: 	Player
+  propertyStyle: 	Bean
+  roles: 	player_startingPosition 	player_conesInitialPositions 	player_cones
+
+- c1: 	org.fulib.classmodel.CollectionType
+  implClass: 	class java.util.ArrayList
+  implTemplate: 	"java.util.ArrayList<%s>"
+  itf: 	org.fulib.classmodel.CollectionInterface.List
+  qualifiedImplName: 	java.util.ArrayList
+  simpleImplName: 	ArrayList
+
+- position_x: 	org.fulib.classmodel.Attribute
+  clazz: 	position
+  id: 	Position_x
+  modified: 	false
+  name: 	x
+  propertyStyle: 	Bean
+  type: 	int
+  typeSignature: 	int
+
+- position_y: 	org.fulib.classmodel.Attribute
+  clazz: 	position
+  id: 	Position_y
+  modified: 	false
+  name: 	y
+  propertyStyle: 	Bean
+  type: 	int
+  typeSignature: 	int
+
+- position_globalState: 	org.fulib.classmodel.Attribute
+  clazz: 	position
+  id: 	Position_globalState
+  modified: 	false
+  name: 	globalState
+  propertyStyle: 	Bean
+  type: 	int
+  typeSignature: 	int
+
+- position_localState: 	org.fulib.classmodel.Attribute
+  clazz: 	position
+  id: 	Position_localState
+  modified: 	false
+  name: 	localState
+  propertyStyle: 	Bean
+  type: 	int
+  typeSignature: 	int
+
+- position_condition: 	org.fulib.classmodel.Attribute
+  clazz: 	position
+  id: 	Position_condition
+  modified: 	false
+  name: 	condition
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- position_cone: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	position
+  id: 	Position_cone
+  modified: 	false
+  name: 	cone
+  other: 	cone_position
+  propertyStyle: 	Bean
+
+- position_player: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	position
+  id: 	Position_player
+  modified: 	false
+  name: 	player
+  other: 	player_startingPosition
+  propertyStyle: 	Bean
+
+- position_initialPlayer: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	position
+  id: 	Position_initialPlayer
+  modified: 	false
+  name: 	initialPlayer
+  other: 	player_conesInitialPositions
+  propertyStyle: 	Bean
+
+- cone_color: 	org.fulib.classmodel.Attribute
+  clazz: 	cone
+  id: 	Cone_color
+  modified: 	false
+  name: 	color
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- cone_movingDirection: 	org.fulib.classmodel.Attribute
+  clazz: 	cone
+  id: 	Cone_movingDirection
+  modified: 	false
+  name: 	movingDirection
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- cone_visible: 	org.fulib.classmodel.Attribute
+  clazz: 	cone
+  id: 	Cone_visible
+  modified: 	false
+  name: 	visible
+  propertyStyle: 	Bean
+  type: 	boolean
+  typeSignature: 	boolean
+
+- cone_position: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	cone
+  id: 	Cone_position
+  modified: 	false
+  name: 	position
+  other: 	position_cone
+  propertyStyle: 	Bean
+
+- cone_player: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	cone
+  id: 	Cone_player
+  modified: 	false
+  name: 	player
+  other: 	player_cones
+  propertyStyle: 	Bean
+
+- player_name: 	org.fulib.classmodel.Attribute
+  clazz: 	player
+  id: 	Player_name
+  modified: 	false
+  name: 	name
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- player_playerColor: 	org.fulib.classmodel.Attribute
+  clazz: 	player
+  id: 	Player_playerColor
+  modified: 	false
+  name: 	playerColor
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- player_startingPosition: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	1
+  clazz: 	player
+  id: 	Player_startingPosition
+  modified: 	false
+  name: 	startingPosition
+  other: 	position_player
+  propertyStyle: 	Bean
+
+- player_conesInitialPositions: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	player
+  collectionType: 	c1
+  id: 	Player_conesInitialPositions
+  modified: 	false
+  name: 	conesInitialPositions
+  other: 	position_initialPlayer
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
+
+- player_cones: 	org.fulib.classmodel.AssocRole
+  aggregation: 	false
+  cardinality: 	42
+  clazz: 	player
+  collectionType: 	c1
+  id: 	Player_cones
+  modified: 	false
+  name: 	cones
+  other: 	cone_player
+  propertyStyle: 	Bean
+  roleType: 	"java.util.ArrayList<%s>"
+
