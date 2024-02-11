@@ -16,7 +16,7 @@
   roles: 	position_cone 	position_player 	position_initialPlayer
 
 - cone: 	org.fulib.classmodel.Clazz
-  attributes: 	cone_color 	cone_movingDirection 	cone_visible
+  attributes: 	cone_color 	cone_movingDirection 	cone_condition 	cone_visible
   model: 	c
   modified: 	false
   name: 	Cone
@@ -127,6 +127,15 @@
   id: 	Cone_movingDirection
   modified: 	false
   name: 	movingDirection
+  propertyStyle: 	Bean
+  type: 	String
+  typeSignature: 	String
+
+- cone_condition: 	org.fulib.classmodel.Attribute
+  clazz: 	cone
+  id: 	Cone_condition
+  modified: 	false
+  name: 	condition
   propertyStyle: 	Bean
   type: 	String
   typeSignature: 	String

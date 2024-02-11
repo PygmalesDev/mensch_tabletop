@@ -13,6 +13,7 @@ public class Cone
    public static final String PROPERTY_COLOR = "color";
    public static final String PROPERTY_MOVING_DIRECTION = "movingDirection";
    public static final String PROPERTY_VISIBLE = "visible";
+   public static final String PROPERTY_CONDITION = "condition";
    private Position position;
    private Player player;
    protected PropertyChangeSupport listeners;
@@ -20,6 +21,7 @@ public class Cone
    private String movingDirection;
    private boolean visible;
    private Image image;
+   private String condition;
 
    public Cone setImage() {
       switch (this.color) {
@@ -40,6 +42,11 @@ public class Cone
             case PLAYER_COLOR_GREEN -> this.image = GREEN_CONE_IMAGE_SELECTED;
          }
       }
+      return this;
+   }
+
+   public Cone setImage(Image image) {
+      this.image = image;
       return this;
    }
 
@@ -155,6 +162,24 @@ public class Cone
       return this;
    }
 
+   public String getCondition()
+   {
+      return this.condition;
+   }
+
+   public Cone setCondition(String value)
+   {
+      if (Objects.equals(value, this.condition))
+      {
+         return this;
+      }
+
+      final String oldValue = this.condition;
+      this.condition = value;
+      this.firePropertyChange(PROPERTY_CONDITION, oldValue, value);
+      return this;
+   }
+
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
       if (this.listeners != null)
@@ -186,6 +211,7 @@ public class Cone
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getColor());
       result.append(' ').append(this.getMovingDirection());
+      result.append(' ').append(this.getCondition());
       return result.substring(1);
    }
 }

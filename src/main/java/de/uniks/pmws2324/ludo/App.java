@@ -35,4 +35,10 @@ public class App extends Application {
         this.primaryStage.centerOnScreen();
         this.primaryStage.show();
     }
+
+    @Override
+    public void stop() throws Exception {
+        this.controllers.forEach(Controller::destroy);
+        super.stop();
+    }
 }

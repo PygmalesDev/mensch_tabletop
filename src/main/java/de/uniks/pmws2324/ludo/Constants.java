@@ -23,8 +23,17 @@ public class Constants {
     public static final Image YELLOW_CONE_IMAGE_SELECTED = new Image("de/uniks/pmws2324/ludo/img/cones/yellow_cone_selected.png");
     public static final Image GREEN_CONE_IMAGE_SELECTED = new Image("de/uniks/pmws2324/ludo/img/cones/green_cone_selected.png");
 
+    public static final String RED_CONE_LR_ANIM_URL = "de/uniks/pmws2324/ludo/img/cones/animations/red_cone_lr_animation.gif";
+    public static final String RED_CONE_RL_ANIM_URL = "de/uniks/pmws2324/ludo/img/cones/animations/red_cone_rl_animation.gif";
+    public static final String RED_CONE_DT_ANIM_URL = "de/uniks/pmws2324/ludo/img/cones/animations/red_cone_dt_animation.gif";
+    public static final String RED_CONE_TD_ANIM_URL = "de/uniks/pmws2324/ludo/img/cones/animations/red_cone_td_animation.gif";
 
     public static final String CONDITION_SELECTED = "selected";
-    public static final int CONE_OFFSET_X = 45/2;
-    public static final int CONE_OFFSET_Y = 47/2;
+    public static final String CONDITION_MOVED = "moved";
+    public static final String GAME_STATE_PLAY = "play";
+    public static final String GAME_STATE_PAUSE = "pause";
+    public static final int CONE_OFFSET_X = 58;
+    public static final int CONE_OFFSET_Y = 56;
+    public static final int TILE_OFFSET_X = 46;
+    public static final int TILE_OFFSET_Y = 45;
 }

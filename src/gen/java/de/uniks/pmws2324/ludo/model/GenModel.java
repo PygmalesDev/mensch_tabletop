@@ -20,6 +20,7 @@ public class GenModel implements ClassModelDecorator {
     class Cone {
         String color;
         String movingDirection;
+        String condition;
         boolean visible;
         @Link("cones")
         Player player;

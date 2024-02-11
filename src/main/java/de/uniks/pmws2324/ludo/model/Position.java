@@ -25,9 +25,16 @@ public class Position
    private Player player;
    private Player initialPlayer;
 
+   public Position clone() {
+      return new Position()
+              .setX(x).setY(y)
+              .setGlobalState(globalState)
+              .setLocalState(localState);
+   }
+
    public boolean isInRadius(int testX, int textY) {
-      return     testX >= x-CONE_OFFSET_X && testX <= x+CONE_OFFSET_X
-              && textY >= y-CONE_OFFSET_Y && textY <= y+CONE_OFFSET_Y;
+      return     testX >= x-CONE_OFFSET_X/2 && testX <= x+CONE_OFFSET_X/2
+              && textY >= y-CONE_OFFSET_Y/2 && textY <= y+CONE_OFFSET_Y/2;
    }
 
    public int getX()
