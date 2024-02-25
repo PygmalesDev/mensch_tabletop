@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.ImageInput?>
+<?import javafx.scene.effect.Reflection?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.QuadCurve?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="839.0" prefWidth="839.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pmws2324.ludo.controller.GameOverController">
+   <children>
+      <ImageView fitHeight="868.0" fitWidth="839.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/ui/animations/deck_menu_background.gif" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="839.0" fitWidth="918.0" layoutY="-29.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/ui/endgame_board.png" />
+         </image>
+         <effect>
+            <DropShadow height="155.34" radius="82.30000000000001" spread="0.46" width="175.86" />
+         </effect>
+      </ImageView>
+      <ImageView fx:id="winnerImageView" fitHeight="839.0" fitWidth="890.0" layoutX="-8.0" layoutY="-39.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/ui/red_winner.png" />
+         </image>
+         <effect>
+            <DropShadow height="164.14" offsetY="10.0" radius="82.3025" spread="0.43" width="167.07" />
+         </effect>
+      </ImageView>
+      <Label fx:id="winnerNameLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="150.0" layoutY="150.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" text="WinnerName" textAlignment="RIGHT" textFill="WHITE">
+         <font>
+            <Font name="Unispace-Bold" size="49.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="GAUSSIAN" height="41.04" offsetY="-10.0" radius="9.76" spread="0.39" width="0.0">
+               <input>
+                  <Reflection topOpacity="0.14">
+                     <input>
+                        <Glow level="0.55" />
+                     </input>
+                  </Reflection>
+               </input>
+            </DropShadow>
+         </effect>
+      </Label>
+      <Label layoutX="523.0" layoutY="150.0" text="wins!" textFill="WHITE">
+         <font>
+            <Font name="Unispace-Bold" size="49.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="GAUSSIAN" height="41.04" offsetY="-10.0" radius="9.76" spread="0.39" width="0.0">
+               <input>
+                  <Reflection topOpacity="0.14">
+                     <input>
+                        <Glow level="0.53" />
+                     </input>
+                  </Reflection>
+               </input>
+            </DropShadow>
+         </effect>
+      </Label>
+      <Label fx:id="loserLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="445.0" layoutY="302.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" rotate="-15.9" text="Bunch of losers" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Unispace-Bold" size="20.0" />
+         </font>
+         <effect>
+            <DropShadow height="167.06" radius="64.1" spread="0.81" width="91.34" />
+         </effect>
+      </Label>
+      <QuadCurve controlX="71.0" controlY="-22.0" endX="94.0" endY="-56.0" fill="#1f93ff00" layoutX="422.0" layoutY="399.0" startX="128.0" startY="21.973388671875" stroke="WHITE" strokeType="INSIDE" strokeWidth="3.0">
+         <effect>
+            <DropShadow height="96.72" radius="28.93" spread="0.34" />
+         </effect>
+      </QuadCurve>
+      <Polygon fill="WHITE" layoutX="565.0" layoutY="411.0" points="-37.0, 8.0, -9.098044395446777, 9.396825790405273, -22.0, -16.0" rotate="24.0" stroke="WHITE" strokeLineCap="ROUND">
+         <effect>
+            <DropShadow height="134.83" radius="52.260000000000005" spread="0.55" width="76.21" />
+         </effect>
+      </Polygon>
+      <Button fx:id="quitButton" layoutX="190.0" layoutY="682.0" mnemonicParsing="false" text="Button">
+         <effect>
+            <ImageInput>
+               <source>
+                  <Image url="@../img/ui/menu_quit_button.png" />
+               </source>
+            </ImageInput>
+         </effect>
+      </Button>
+      <Group fx:id="loserGroup" layoutX="468.0" layoutY="389.0">
+         <children>
+            <ImageView fitHeight="95.0" fitWidth="136.0" layoutX="9.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/ui/loser_cone_blue.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="106.0" layoutY="-8.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/ui/loser_cone_green.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="85.0" fitWidth="103.0" layoutX="106.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/ui/loser_cone_yellow.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+         </children>
+      </Group>
+      <Group fx:id="loserPlayerNames" layoutX="469.0" layoutY="509.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-5.0" layoutY="9.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="120.0" text="LoserPlayerName" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="13.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="87.0" layoutY="78.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="120.0" text="LoserPlayerName" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="13.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="91.0" layoutY="-43.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="120.0" text="LoserPlayerName" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="13.0" />
+               </font>
+            </Label>
+         </children>
+         <effect>
+            <DropShadow height="82.06" radius="44.195" spread="0.84" width="96.72">
+               <input>
+                  <Glow level="0.5" />
+               </input>
+            </DropShadow>
+         </effect>
+      </Group>
+   </children>
+</Pane>

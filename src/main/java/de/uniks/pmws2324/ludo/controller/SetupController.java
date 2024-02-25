@@ -118,7 +118,7 @@ public class SetupController extends Controller {
     private class ConditionsThread implements Runnable {
         @Override
         public void run() {
-            while (app.getSceneTitle().equals("Setup")) {
+            while (!app.getSceneTitle().equals("Ingames")) {
                 List<String> enteredNicknames = getPlayerNicknames();
                 Platform.runLater(() -> {
                     if (enteredNicknames.size() == playerAmount) {

@@ -54,8 +54,6 @@ public class MenuController extends Controller {
         this.quitButton.setOnMouseExited(mouseEvent ->
                 this.quitButton.setGraphic(QUIT_BUTTON_URL));
 
-        this.playButton.setOnMouseClicked(mouseEvent -> {
-            this.app.changeScene(new SetupController(this.app, this.gameService), "Setup");
-        });
+        this.playButton.setOnMouseClicked(mouseEvent -> this.app.changeScene("Setup"));
     }
 }

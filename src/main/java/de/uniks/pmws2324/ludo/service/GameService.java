@@ -6,6 +6,7 @@ import de.uniks.pmws2324.ludo.controller.MenuController;
 import de.uniks.pmws2324.ludo.model.Cone;
 import de.uniks.pmws2324.ludo.model.Player;
 import de.uniks.pmws2324.ludo.model.Position;
+import javafx.application.Platform;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -334,13 +335,13 @@ public class GameService {
     /**
      * Checks if all the current player's cones are standing on the final fields.
      */
-    public void checkWinningConditions() {
+    public void checkWinningConditions(){
          if (this.currentPlayer.getCones().stream()
                  .map(Cone::getPosition)
                  .map(Position::getLocalState)
                  .allMatch(state -> state > 39)) {
              this.setGameState(WIN);
-             this.app.changeScene(new MenuController(this.app, this), "Menu");
+             this.app.changeScene("GameOver");
          }
     }
 

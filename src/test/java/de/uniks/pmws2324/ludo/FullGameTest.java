@@ -4,8 +4,10 @@ import de.uniks.pmws2324.ludo.model.Cone;
 import de.uniks.pmws2324.ludo.model.Player;
 import de.uniks.pmws2324.ludo.model.Position;
 import de.uniks.pmws2324.ludo.service.GameService;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -87,10 +89,12 @@ class FullGameTest extends ApplicationTest {
         clickOn(beginButton);
 
         // Play the game
+        this.gameService.setSeed(-1321092957169982059L);
+        sleep(4000);
         assertEquals("Ingame", this.app.getSceneTitle());
         Button diceThrowButton = lookup("#diceThrowButton").query();
 
-        while (!this.gameService.getGameState().equals(GAME_STATE.WIN)) {
+        do {
             GAME_STATE state = this.gameService.getGameState();
             Player current = this.gameService.getCurrentPlayer();
 
@@ -122,6 +126,25 @@ class FullGameTest extends ApplicationTest {
                 }
             }
             sleep(300);
-        }
+        } while (!this.gameService.getGameState().equals(GAME_STATE.WIN));
+        sleep(1000);
+
+        // Switch to the winning screen
+        assertEquals("GameOver", this.app.getSceneTitle());
+        Label winnerNameLabel = lookup("#winnerNameLabel").query();
+
+        // Check if the winner is named properly
+        assertEquals(this.gameService.getCurrentPlayer().getName(), winnerNameLabel.getText());
+
+        // Check if the other player is in the loser group
+        Group loserGroup = lookup("#loserPlayerNames").query();
+        assertEquals(this.gameService.getPlayers().get(1).getName(),
+                ((Label) loserGroup.getChildren().get(0)).getText());
+        sleep(3000);
+
+        // Switch to the main screen
+        clickOn("#quitButton");
+        sleep(1000);
+        assertEquals("Menu", this.app.getSceneTitle());
     }
 }

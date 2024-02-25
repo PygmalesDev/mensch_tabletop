@@ -46,6 +46,9 @@ public class Constants {
     public static final ImageView SETUP_BEGIN_BUTTON_INACTIVE = new ImageView("de/uniks/pmws2324/ludo/img/ui/setup_begin_button_inactive.png");
     public static final String SETUP_PLAYER_SIGN_URL = "de/uniks/pmws2324/ludo/img/ui/setup_player_sign_";
 
+    public static final String WINNER_CONE_URL = "de/uniks/pmws2324/ludo/img/ui/winner_";
+    public static final String LOSER_CONE_URL = "de/uniks/pmws2324/ludo/img/ui/loser_cone_";
+
     public static final String DICE_URL = "de/uniks/pmws2324/ludo/img/dices/dice_";
     public static final String CONE_UI_URL = "de/uniks/pmws2324/ludo/img/ui/ui_cone_";
     public static final String CONE_UI_SELECTED_URL = "de/uniks/pmws2324/ludo/img/ui/ui_cone_selected_";
