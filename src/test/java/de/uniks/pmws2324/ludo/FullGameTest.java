@@ -133,7 +133,7 @@ class FullGameTest extends ApplicationTest {
         Label winnerNameLabel = lookup("#winnerNameLabel").query();
 
         // Check if the winner is named properly
-        assertEquals(this.gameService.getCurrentPlayer().getName(), winnerNameLabel.getText());
+        assertTrue(winnerNameLabel.getText().contains(this.gameService.getCurrentPlayer().getName()));
 
         // Check if the other player is in the loser group
         Group loserGroup = lookup("#loserPlayerNames").query();

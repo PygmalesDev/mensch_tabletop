@@ -24,6 +24,8 @@ public class GameOverController extends Controller {
     @FXML
     Label winnerNameLabel;
     @FXML
+    Label loserLabel;
+    @FXML
     Group loserGroup;
     @FXML
     Group loserPlayerNames;
@@ -44,8 +46,10 @@ public class GameOverController extends Controller {
             throw new RuntimeException(e);
         }
         this.quitButton.setOnMouseClicked(mouseEvent -> this.app.changeScene("Menu"));
+        if (this.gameService.getPlayerAmount() == 2)
+            this.loserLabel.setText("Loser!");
 
-        this.winnerNameLabel.setText(this.gameService.getCurrentPlayer().getName());
+        this.winnerNameLabel.setText(this.gameService.getCurrentPlayer().getName() + " wins!");
         this.winnerImageView.setImage(new Image(WINNER_CONE_URL +
                 this.gameService.getCurrentPlayer().getPlayerColor() + ".png"));
 

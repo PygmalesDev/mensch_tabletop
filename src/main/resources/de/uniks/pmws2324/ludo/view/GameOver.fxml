@@ -31,13 +31,13 @@
       </ImageView>
       <ImageView fx:id="winnerImageView" fitHeight="839.0" fitWidth="890.0" layoutX="-8.0" layoutY="-39.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../img/ui/red_winner.png" />
+            <Image url="@../img/ui/winner_yellow.png" />
          </image>
          <effect>
             <DropShadow height="164.14" offsetY="10.0" radius="82.3025" spread="0.43" width="167.07" />
          </effect>
       </ImageView>
-      <Label fx:id="winnerNameLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="150.0" layoutY="150.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" text="WinnerName" textAlignment="RIGHT" textFill="WHITE">
+      <Label fx:id="winnerNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="256.0" layoutY="150.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" text="WinnerName" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Unispace-Bold" size="49.0" />
          </font>
@@ -47,22 +47,6 @@
                   <Reflection topOpacity="0.14">
                      <input>
                         <Glow level="0.55" />
-                     </input>
-                  </Reflection>
-               </input>
-            </DropShadow>
-         </effect>
-      </Label>
-      <Label layoutX="523.0" layoutY="150.0" text="wins!" textFill="WHITE">
-         <font>
-            <Font name="Unispace-Bold" size="49.0" />
-         </font>
-         <effect>
-            <DropShadow blurType="GAUSSIAN" height="41.04" offsetY="-10.0" radius="9.76" spread="0.39" width="0.0">
-               <input>
-                  <Reflection topOpacity="0.14">
-                     <input>
-                        <Glow level="0.53" />
                      </input>
                   </Reflection>
                </input>
