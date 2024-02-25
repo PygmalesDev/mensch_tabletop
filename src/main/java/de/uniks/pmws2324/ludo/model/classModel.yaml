@@ -8,15 +8,15 @@
   packageSrcFolder: 	"src/main/java/de/uniks/pmws2324/ludo/model"
 
 - position: 	org.fulib.classmodel.Clazz
-  attributes: 	position_x 	position_y 	position_globalState 	position_localState 	position_condition
+  attributes: 	position_x 	position_y 	position_globalState 	position_localState
   model: 	c
   modified: 	false
   name: 	Position
   propertyStyle: 	Bean
-  roles: 	position_cone 	position_player 	position_initialPlayer
+  roles: 	position_cone 	position_player 	position_basePlayer
 
 - cone: 	org.fulib.classmodel.Clazz
-  attributes: 	cone_color 	cone_movingDirection 	cone_movable 	cone_visible 	cone_readyForFinishing
+  attributes: 	cone_visible 	cone_movingDirection
   model: 	c
   modified: 	false
   name: 	Cone
@@ -29,7 +29,7 @@
   modified: 	false
   name: 	Player
   propertyStyle: 	Bean
-  roles: 	player_startingPosition 	player_conesInitialPositions 	player_cones
+  roles: 	player_startingPosition 	player_basePositions 	player_cones
 
 - c1: 	org.fulib.classmodel.CollectionType
   implClass: 	class java.util.ArrayList
@@ -74,15 +74,6 @@
   type: 	int
   typeSignature: 	int
 
-- position_condition: 	org.fulib.classmodel.Attribute
-  clazz: 	position
-  id: 	Position_condition
-  modified: 	false
-  name: 	condition
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
 - position_cone: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	1
@@ -103,42 +94,15 @@
   other: 	player_startingPosition
   propertyStyle: 	Bean
 
-- position_initialPlayer: 	org.fulib.classmodel.AssocRole
+- position_basePlayer: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	1
   clazz: 	position
-  id: 	Position_initialPlayer
+  id: 	Position_basePlayer
   modified: 	false
-  name: 	initialPlayer
-  other: 	player_conesInitialPositions
+  name: 	basePlayer
+  other: 	player_basePositions
   propertyStyle: 	Bean
-
-- cone_color: 	org.fulib.classmodel.Attribute
-  clazz: 	cone
-  id: 	Cone_color
-  modified: 	false
-  name: 	color
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- cone_movingDirection: 	org.fulib.classmodel.Attribute
-  clazz: 	cone
-  id: 	Cone_movingDirection
-  modified: 	false
-  name: 	movingDirection
-  propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
-
-- cone_movable: 	org.fulib.classmodel.Attribute
-  clazz: 	cone
-  id: 	Cone_movable
-  modified: 	false
-  name: 	movable
-  propertyStyle: 	Bean
-  type: 	boolean
-  typeSignature: 	boolean
 
 - cone_visible: 	org.fulib.classmodel.Attribute
   clazz: 	cone
@@ -149,14 +113,14 @@
   type: 	boolean
   typeSignature: 	boolean
 
-- cone_readyForFinishing: 	org.fulib.classmodel.Attribute
+- cone_movingDirection: 	org.fulib.classmodel.Attribute
   clazz: 	cone
-  id: 	Cone_readyForFinishing
+  id: 	Cone_movingDirection
   modified: 	false
-  name: 	readyForFinishing
+  name: 	movingDirection
   propertyStyle: 	Bean
-  type: 	boolean
-  typeSignature: 	boolean
+  type: 	String
+  typeSignature: 	String
 
 - cone_position: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
@@ -215,15 +179,15 @@
   other: 	position_player
   propertyStyle: 	Bean
 
-- player_conesInitialPositions: 	org.fulib.classmodel.AssocRole
+- player_basePositions: 	org.fulib.classmodel.AssocRole
   aggregation: 	false
   cardinality: 	42
   clazz: 	player
   collectionType: 	c1
-  id: 	Player_conesInitialPositions
+  id: 	Player_basePositions
   modified: 	false
-  name: 	conesInitialPositions
-  other: 	position_initialPlayer
+  name: 	basePositions
+  other: 	position_basePlayer
   propertyStyle: 	Bean
   roleType: 	"java.util.ArrayList<%s>"
 

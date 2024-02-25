@@ -11,20 +11,19 @@ public class Position
    public static final String PROPERTY_Y = "y";
    public static final String PROPERTY_GLOBAL_STATE = "globalState";
    public static final String PROPERTY_LOCAL_STATE = "localState";
-   public static final String PROPERTY_CONDITION = "condition";
    public static final String PROPERTY_CONE = "cone";
    public static final String PROPERTY_PLAYER = "player";
-   public static final String PROPERTY_INITIAL_PLAYER = "initialPlayer";
+   public static final String PROPERTY_BASE_PLAYER = "basePlayer";
    private int x;
    private int y;
    private int globalState;
    private int localState;
-   private String condition;
    private Cone cone;
    protected PropertyChangeSupport listeners;
    private Player player;
-   private Player initialPlayer;
+   private Player basePlayer;
 
+   // --------------------- CUSTOM METHODS ---------------------
    public boolean hasCone() {
       return !Objects.isNull(this.cone);
    }
@@ -41,6 +40,7 @@ public class Position
               && textY >= y-CONE_OFFSET_Y/2 && textY <= y+CONE_OFFSET_Y/2;
    }
 
+   // ------------------- GENERATED METHODS --------------------
    public int getX()
    {
       return this.x;
@@ -113,24 +113,6 @@ public class Position
       return this;
    }
 
-   public String getCondition()
-   {
-      return this.condition;
-   }
-
-   public Position setCondition(String value)
-   {
-      if (Objects.equals(value, this.condition))
-      {
-         return this;
-      }
-
-      final String oldValue = this.condition;
-      this.condition = value;
-      this.firePropertyChange(PROPERTY_CONDITION, oldValue, value);
-      return this;
-   }
-
    public Cone getCone()
    {
       return this.cone;
@@ -185,30 +167,30 @@ public class Position
       return this;
    }
 
-   public Player getInitialPlayer()
+   public Player getBasePlayer()
    {
-      return this.initialPlayer;
+      return this.basePlayer;
    }
 
-   public Position setInitialPlayer(Player value)
+   public Position setBasePlayer(Player value)
    {
-      if (this.initialPlayer == value)
+      if (this.basePlayer == value)
       {
          return this;
       }
 
-      final Player oldValue = this.initialPlayer;
-      if (this.initialPlayer != null)
+      final Player oldValue = this.basePlayer;
+      if (this.basePlayer != null)
       {
-         this.initialPlayer = null;
-         oldValue.withoutConesInitialPositions(this);
+         this.basePlayer = null;
+         oldValue.withoutBasePositions(this);
       }
-      this.initialPlayer = value;
+      this.basePlayer = value;
       if (value != null)
       {
-         value.withConesInitialPositions(this);
+         value.withBasePositions(this);
       }
-      this.firePropertyChange(PROPERTY_INITIAL_PLAYER, oldValue, value);
+      this.firePropertyChange(PROPERTY_BASE_PLAYER, oldValue, value);
       return this;
    }
 
@@ -231,18 +213,10 @@ public class Position
       return this.listeners;
    }
 
-   @Override
-   public String toString()
-   {
-      final StringBuilder result = new StringBuilder();
-      result.append(' ').append(this.getCondition());
-      return result.substring(1);
-   }
-
    public void removeYou()
    {
       this.setCone(null);
       this.setPlayer(null);
-      this.setInitialPlayer(null);
+      this.setBasePlayer(null);
    }
 }

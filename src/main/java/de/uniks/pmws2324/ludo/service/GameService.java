@@ -81,7 +81,7 @@ public class GameService {
     private Player assignConesInitialPosition(Player player) {
         switch (player.getPlayerColor()) {
             case PLAYER_COLOR_RED ->
-                    player.withConesInitialPositions(
+                    player.withBasePositions(
                             new Position().setX(197).setY(168).setLocalState(-1),
                             new Position().setX(243).setY(168).setLocalState(-1),
                             new Position().setX(197).setY(214).setLocalState(-1),
@@ -90,7 +90,7 @@ public class GameService {
                             .setGlobalState(0)
                             .setLocalState(-1));
             case PLAYER_COLOR_BLUE ->
-                    player.withConesInitialPositions(
+                    player.withBasePositions(
                             new Position().setX(613).setY(168).setLocalState(-1),
                             new Position().setX(658).setY(168).setLocalState(-1),
                             new Position().setX(613).setY(214).setLocalState(-1),
@@ -99,7 +99,7 @@ public class GameService {
                             .setGlobalState(10)
                             .setLocalState(-1));
             case PLAYER_COLOR_GREEN ->
-                    player.withConesInitialPositions(
+                    player.withBasePositions(
                             new Position().setX(613).setY(577).setLocalState(-1),
                             new Position().setX(658).setY(577).setLocalState(-1),
                             new Position().setX(613).setY(625).setLocalState(-1),
@@ -108,7 +108,7 @@ public class GameService {
                             .setGlobalState(20)
                             .setLocalState(-1));
             case PLAYER_COLOR_YELLOW ->
-                    player.withConesInitialPositions(
+                    player.withBasePositions(
                             new Position().setX(197).setY(577).setLocalState(-1),
                             new Position().setX(243).setY(577).setLocalState(-1),
                             new Position().setX(197).setY(625).setLocalState(-1),
@@ -117,7 +117,7 @@ public class GameService {
                             .setGlobalState(30)
                             .setLocalState(-1));
             default ->
-                    player.withConesInitialPositions(
+                    player.withBasePositions(
                             new Position().setX(-1).setY(-1),
                             new Position().setX(-1).setY(-1),
                             new Position().setX(-1).setY(-1),
@@ -133,10 +133,9 @@ public class GameService {
      * and puts them on the respective initial position.
      */
     private Player assignCones(Player player) {
-        return player.withCones(player.getConesInitialPositions().stream()
+        return player.withCones(player.getBasePositions().stream()
                 .map(pos -> new Cone()
-                        .setColor(player.getPlayerColor())
-                        .loadImageNormal().loadImageSelected()
+                        .loadImageNormal(player.getPlayerColor()).loadImageSelected(player.getPlayerColor())
                         .setCurrentImage("NORMAL")
                         .setPosition(pos).setVisible(true))
                 .toList());
@@ -230,7 +229,7 @@ public class GameService {
      * Removes cone from the field and returns it to the base.
      */
     public void throwOut(Cone cone) {
-        cone.getPlayer().getConesInitialPositions().stream()
+        cone.getPlayer().getBasePositions().stream()
                 .filter(position -> Objects.isNull(position.getCone()))
                 .findFirst().ifPresent(cone::setPosition);
     }
@@ -243,7 +242,7 @@ public class GameService {
     public boolean moveConeToStartingPosition(Cone cone) {
         AtomicBoolean outcome = new AtomicBoolean(false);
         this.getEnemyCones().stream()
-                .filter(another -> !another.getPlayer().getConesInitialPositions().contains(another.getPosition()))
+                .filter(another -> !another.getPlayer().getBasePositions().contains(another.getPosition()))
                 .filter(another -> another.getPosition().getGlobalState()
                         == this.currentPlayer.getStartingPosition().getGlobalState())
                 .findFirst().ifPresent(another -> {
@@ -322,7 +321,7 @@ public class GameService {
     public boolean checkCollisionWithEnemyCone(Cone cone) {
         AtomicBoolean toReturn = new AtomicBoolean(false);
         this.getEnemyCones().stream()
-                .filter(another -> !another.getPlayer().getConesInitialPositions().contains(another.getPosition()))
+                .filter(another -> !another.getPlayer().getBasePositions().contains(another.getPosition()))
                 .filter(another -> another.getPosition().getGlobalState() != -1 && another.getPosition().getGlobalState()
                         == cone.getPosition().getGlobalState())
                 .findFirst().ifPresent(another -> {
@@ -335,14 +334,15 @@ public class GameService {
     /**
      * Checks if all the current player's cones are standing on the final fields.
      */
-    public void checkWinningConditions(){
+    public boolean checkWinningConditions(){
          if (this.currentPlayer.getCones().stream()
                  .map(Cone::getPosition)
                  .map(Position::getLocalState)
                  .allMatch(state -> state > 39)) {
              this.setGameState(WIN);
-             this.app.changeScene("GameOver");
+            return true;
          }
+         return false;
     }
 
     /**
@@ -360,7 +360,7 @@ public class GameService {
         }
 
         if (pos.getLocalState() == 38) {
-            switch (cone.getColor()) {
+            switch (cone.getPlayer().getPlayerColor()) {
                 case PLAYER_COLOR_RED -> cone.setMovingDirection(CONE_DIRECTION_RIGHT);
                 case PLAYER_COLOR_BLUE -> cone.setMovingDirection(CONE_DIRECTION_DOWN);
                 case PLAYER_COLOR_YELLOW -> cone.setMovingDirection(CONE_DIRECTION_UP);

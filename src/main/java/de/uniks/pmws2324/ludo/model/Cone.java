@@ -10,32 +10,28 @@ public class Cone
 {
    public static final String PROPERTY_POSITION = "position";
    public static final String PROPERTY_PLAYER = "player";
-   public static final String PROPERTY_COLOR = "color";
    public static final String PROPERTY_MOVING_DIRECTION = "movingDirection";
    public static final String PROPERTY_VISIBLE = "visible";
-   public static final String PROPERTY_MOVABLE = "movable";
-   public static final String PROPERTY_READY_FOR_FINISHING = "readyForFinishing";
    private Position position;
    private Player player;
    protected PropertyChangeSupport listeners;
-   private String color;
    private String movingDirection;
    private boolean visible;
+
+   // -------------------- CUSTOM VARIABLES --------------------
    private Image imgNormal;
    private Image imgSelected;
    private Image imgCurrent;
-   private boolean movable;
-   private boolean readyForFinishing;
 
    // --------------------- CUSTOM METHODS ---------------------
 
-   public Cone loadImageNormal() {
-      this.imgNormal = new Image(CONE_IMG + this.color + ".png");
+   public Cone loadImageNormal(String color) {
+      this.imgNormal = new Image(CONE_IMG + color + ".png");
       return this;
    }
 
-   public Cone loadImageSelected() {
-      this.imgSelected = new Image(CONE_IMG_SELECTED + this.color + ".png");
+   public Cone loadImageSelected(String color) {
+      this.imgSelected = new Image(CONE_IMG_SELECTED + color + ".png");
       return this;
    }
 
@@ -52,42 +48,6 @@ public class Cone
    }
 
    // ------------------- GENERATED METHODS --------------------
-   public boolean isReadyForFinishing()
-   {
-      return this.readyForFinishing;
-   }
-
-   public Cone setReadyForFinishing(boolean value)
-   {
-      if (value == this.readyForFinishing)
-      {
-         return this;
-      }
-
-      final boolean oldValue = this.readyForFinishing;
-      this.readyForFinishing = value;
-      this.firePropertyChange(PROPERTY_READY_FOR_FINISHING, oldValue, value);
-      return this;
-   }
-
-   public boolean isMovable()
-   {
-      return this.movable;
-   }
-
-   public Cone setMovable(boolean value)
-   {
-      if (value == this.movable)
-      {
-         return this;
-      }
-
-      final boolean oldValue = this.movable;
-      this.movable = value;
-      this.firePropertyChange(PROPERTY_MOVABLE, oldValue, value);
-      return this;
-   }
-
    public Position getPosition()
    {
       return this.position;
@@ -139,24 +99,6 @@ public class Cone
          value.withCones(this);
       }
       this.firePropertyChange(PROPERTY_PLAYER, oldValue, value);
-      return this;
-   }
-
-   public String getColor()
-   {
-      return this.color;
-   }
-
-   public Cone setColor(String value)
-   {
-      if (Objects.equals(value, this.color))
-      {
-         return this;
-      }
-
-      final String oldValue = this.color;
-      this.color = value;
-      this.firePropertyChange(PROPERTY_COLOR, oldValue, value);
       return this;
    }
 
@@ -225,7 +167,6 @@ public class Cone
    public String toString()
    {
       final StringBuilder result = new StringBuilder();
-      result.append(' ').append(this.getColor());
       result.append(' ').append(this.getMovingDirection());
       return result.substring(1);
    }

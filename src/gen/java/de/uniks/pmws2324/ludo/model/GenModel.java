@@ -15,15 +15,12 @@ public class GenModel implements ClassModelDecorator {
         List<Cone> cones;
         @Link("player")
         Position startingPosition;
-        @Link("initialPlayer")
-        List<Position> conesInitialPositions;
+        @Link("basePlayer")
+        List<Position> basePositions;
     }
     class Cone {
-        String color;
-        String movingDirection;
-        boolean movable;
         boolean visible;
-        boolean readyForFinishing;
+        String movingDirection;
         @Link("cones")
         Player player;
         @Link("cone")
@@ -34,13 +31,12 @@ public class GenModel implements ClassModelDecorator {
         int y;
         int globalState;
         int localState;
-        String condition;
         @Link("position")
         Cone cone;
         @Link("startingPosition")
         Player player;
-        @Link("conesInitialPositions")
-        Player initialPlayer;
+        @Link("basePositions")
+        Player basePlayer;
 
     }
 

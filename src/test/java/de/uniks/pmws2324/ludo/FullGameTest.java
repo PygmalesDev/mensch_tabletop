@@ -32,7 +32,6 @@ class FullGameTest extends ApplicationTest {
     private App app;
     private GameService gameService;
     private double winX, winY;
-    private final List<String> testPlayerNames = List.of("Sanbo", "Fyll");
 
     @Override
     public void start(Stage stage) {
@@ -73,7 +72,7 @@ class FullGameTest extends ApplicationTest {
         sleep(500);
         assertTrue(beginButton.isDisabled());
 
-        Iterator<String> testNamesIterator = this.testPlayerNames.stream().iterator();
+        Iterator<String> testNamesIterator = TEST_PLAYER_NAMES.stream().iterator();
 
         // Fill in the names and begin game
         for (Node pane : playerSigns) {
@@ -127,7 +126,7 @@ class FullGameTest extends ApplicationTest {
             }
             sleep(300);
         } while (!this.gameService.getGameState().equals(GAME_STATE.WIN));
-        sleep(1000);
+        sleep(2000);
 
         // Switch to the winning screen
         assertEquals("GameOver", this.app.getSceneTitle());

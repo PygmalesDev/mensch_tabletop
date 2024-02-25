@@ -172,6 +172,7 @@ public class TestGameStates extends ApplicationTest {
 
     public void initializeGameIfNeeded() {
         if (!this.app.getSceneTitle().equals("Ingame")) {
+            this.gameService.setPlayerNames(Constants.TEST_PLAYER_NAMES);
             Platform.runLater(() -> this.app.initializeGame(2));
             sleep(1000);
 

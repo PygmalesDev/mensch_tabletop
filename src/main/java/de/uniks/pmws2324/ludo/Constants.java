@@ -2,6 +2,7 @@ package de.uniks.pmws2324.ludo;
 
 import javafx.scene.image.ImageView;
 
+import java.util.List;
 import java.util.Map;
 
 public class Constants {
@@ -52,6 +53,8 @@ public class Constants {
     public static final String DICE_URL = "de/uniks/pmws2324/ludo/img/dices/dice_";
     public static final String CONE_UI_URL = "de/uniks/pmws2324/ludo/img/ui/ui_cone_";
     public static final String CONE_UI_SELECTED_URL = "de/uniks/pmws2324/ludo/img/ui/ui_cone_selected_";
+
+    public static final List<String> TEST_PLAYER_NAMES = List.of("Sanbo", "Fyll");
 
     public static final Map<String, int[]> DICE_COORDS = Map.ofEntries(
             Map.entry("red", new int[]{300-42, 193-42}),

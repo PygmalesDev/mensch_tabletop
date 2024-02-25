@@ -79,7 +79,7 @@ public class IngameController extends Controller {
         this.drawPlayerRotationUI();
         this.setPlayerNames();
 
-        Thread drawConesThread = new Thread(new DrawConesThread());
+        Thread drawConesThread = new Thread(new TimerThread());
         drawConesThread.start();
     }
 
@@ -231,6 +231,13 @@ public class IngameController extends Controller {
         }
     }
 
+    /**
+     * Switches to the game over screen.
+     */
+    private void switchToGameOverScreen() {
+        this.app.changeScene("GameOver");
+    }
+
     // ------------------------- SUPPORT CLASSES -------------------------
 
     /**
@@ -251,13 +258,16 @@ public class IngameController extends Controller {
     }
 
     /**
-     * A thread for drawing cones on the board and the throw button.
+     * A thread for drawing cones on the board, drawing the throw button and
+     * checking the winning conditions to switch to the game over screen.
      */
-    private class DrawConesThread implements Runnable {
+    private class TimerThread implements Runnable {
         @Override
         public void run() {
             while (!gameService.getGameState().equals(WIN)) {
                 Platform.runLater(IngameController.this::drawCones);
+                if (gameService.checkWinningConditions())
+                    Platform.runLater(IngameController.this::switchToGameOverScreen);
                 try { sleep(100);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -295,7 +305,6 @@ public class IngameController extends Controller {
             animationsImageView.setVisible(false);
 
             gameService.checkFinalBlockedState(cone);
-            gameService.checkWinningConditions();
             gameService.continueGame();
         }
 

@@ -13,12 +13,14 @@ import java.util.*;
 public class App extends Application {
     private GameService gameService;
     private Map<String, Controller> controllers;
+    private Map<String, Scene> scenes;
     private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
         this.gameService = new GameService(this);
         this.controllers = new HashMap<>();
+        this.scenes = new HashMap<>();
         this.primaryStage = primaryStage;
 
         this.primaryStage.setResizable(false);
@@ -27,34 +29,42 @@ public class App extends Application {
 
     public void changeScene(String sceneName) {
         Controller controller = null;
-        if (this.controllers.containsKey(sceneName))
+        Scene scene = null;
+        if (this.controllers.containsKey(sceneName)) {
             controller = this.controllers.get(sceneName);
-        else {
+            scene = this.scenes.get(sceneName);
+        } else {
             switch (sceneName) {
                 case "Menu" -> controller = new MenuController(this, this.gameService);
                 case "Setup" -> controller = new SetupController(this, this.gameService);
                 case "GameOver" -> controller = new GameOverController(this, this.gameService);
             }
             this.controllers.put(sceneName, controller);
+            controller.init();
+            scene = new Scene(controller.render());
+            scene.getStylesheets().add("de/uniks/pmws2324/ludo/css/main.css");
+            this.scenes.put(sceneName, scene);
         }
-        controller.init();
-        Scene currentScene = new Scene(controller.render());
-        currentScene.getStylesheets().add("de/uniks/pmws2324/ludo/css/main.css");
 
         this.primaryStage.setTitle(sceneName);
-        this.primaryStage.setScene(currentScene);
+        this.primaryStage.setScene(scene);
         this.primaryStage.centerOnScreen();
         this.primaryStage.show();
     }
 
     public void initializeGame(int playerAmount) {
-        if (!this.controllers.containsKey("Ingame"))
-            this.controllers.put("Ingame", new IngameController(this, this.gameService));
-
         this.gameService.setPlayerAmount(playerAmount);
         this.gameService.setSeed(new Random().nextLong());
         this.gameService.setupGame();
 
+        if (!this.controllers.containsKey("Ingame")) {
+            IngameController ic = new IngameController(this, this.gameService);
+            this.controllers.put("Ingame", ic);
+            ic.init();
+            Scene scene = new Scene(ic.render());
+            scene.getStylesheets().add("de/uniks/pmws2324/ludo/css/main.css");
+            this.scenes.put("Ingame", scene);
+        }
         this.changeScene("Ingame");
     }
 

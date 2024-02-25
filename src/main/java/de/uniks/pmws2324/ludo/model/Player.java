@@ -12,37 +12,31 @@ public class Player
    public static final String PROPERTY_CONES = "cones";
    public static final String PROPERTY_PLAYER_COLOR = "playerColor";
    public static final String PROPERTY_STARTING_POSITION = "startingPosition";
-   public static final String PROPERTY_CONES_INITIAL_POSITIONS = "conesInitialPositions";
    public static final String PROPERTY_DICE_VALUE = "diceValue";
+   public static final String PROPERTY_BASE_POSITIONS = "basePositions";
    private String name;
    private List<Cone> cones;
    protected PropertyChangeSupport listeners;
    private String playerColor;
    private Position startingPosition;
-   private List<Position> conesInitialPositions;
    private int diceValue;
+   private List<Position> basePositions;
 
    // --------------------- CUSTOM METHODS ---------------------
-   /**
-    * Checks if the player has any cones left on his base.
-    */
    public boolean hasConesOnBase() {
-     return this.conesInitialPositions.stream()
+     return this.basePositions.stream()
              .filter(Position::hasCone)
              .toList().size() > 0;
    }
 
-   /**
-    * Checks if the player has a cone standing on the field.
-    */
    public boolean hasConesOnField() {
       return this.cones.stream()
-              .filter(cone -> !this.conesInitialPositions.contains(cone.getPosition()))
+              .filter(cone -> !this.basePositions.contains(cone.getPosition()))
               .toList().size() > 0;
    }
 
    public List<Cone> getConesOnBase() {
-      return this.conesInitialPositions.stream()
+      return this.basePositions.stream()
               .filter(Position::hasCone)
               .map(Position::getCone)
               .toList();
@@ -50,7 +44,7 @@ public class Player
 
    public List<Cone> getConesOnField() {
       return this.cones.stream()
-              .filter(cone -> !this.conesInitialPositions.contains(cone.getPosition()))
+              .filter(cone -> !this.basePositions.contains(cone.getPosition()))
               .toList();
    }
 
@@ -191,72 +185,6 @@ public class Player
       return this;
    }
 
-   public List<Position> getConesInitialPositions()
-   {
-      return this.conesInitialPositions != null ? Collections.unmodifiableList(this.conesInitialPositions) : Collections.emptyList();
-   }
-
-   public Player withConesInitialPositions(Position value)
-   {
-      if (this.conesInitialPositions == null)
-      {
-         this.conesInitialPositions = new ArrayList<>();
-      }
-      if (!this.conesInitialPositions.contains(value))
-      {
-         this.conesInitialPositions.add(value);
-         value.setInitialPlayer(this);
-         this.firePropertyChange(PROPERTY_CONES_INITIAL_POSITIONS, null, value);
-      }
-      return this;
-   }
-
-   public Player withConesInitialPositions(Position... value)
-   {
-      for (final Position item : value)
-      {
-         this.withConesInitialPositions(item);
-      }
-      return this;
-   }
-
-   public Player withConesInitialPositions(Collection<? extends Position> value)
-   {
-      for (final Position item : value)
-      {
-         this.withConesInitialPositions(item);
-      }
-      return this;
-   }
-
-   public Player withoutConesInitialPositions(Position value)
-   {
-      if (this.conesInitialPositions != null && this.conesInitialPositions.remove(value))
-      {
-         value.setInitialPlayer(null);
-         this.firePropertyChange(PROPERTY_CONES_INITIAL_POSITIONS, value, null);
-      }
-      return this;
-   }
-
-   public Player withoutConesInitialPositions(Position... value)
-   {
-      for (final Position item : value)
-      {
-         this.withoutConesInitialPositions(item);
-      }
-      return this;
-   }
-
-   public Player withoutConesInitialPositions(Collection<? extends Position> value)
-   {
-      for (final Position item : value)
-      {
-         this.withoutConesInitialPositions(item);
-      }
-      return this;
-   }
-
    public int getDiceValue()
    {
       return this.diceValue;
@@ -272,6 +200,72 @@ public class Player
       final int oldValue = this.diceValue;
       this.diceValue = value;
       this.firePropertyChange(PROPERTY_DICE_VALUE, oldValue, value);
+      return this;
+   }
+
+   public List<Position> getBasePositions()
+   {
+      return this.basePositions != null ? Collections.unmodifiableList(this.basePositions) : Collections.emptyList();
+   }
+
+   public Player withBasePositions(Position value)
+   {
+      if (this.basePositions == null)
+      {
+         this.basePositions = new ArrayList<>();
+      }
+      if (!this.basePositions.contains(value))
+      {
+         this.basePositions.add(value);
+         value.setBasePlayer(this);
+         this.firePropertyChange(PROPERTY_BASE_POSITIONS, null, value);
+      }
+      return this;
+   }
+
+   public Player withBasePositions(Position... value)
+   {
+      for (final Position item : value)
+      {
+         this.withBasePositions(item);
+      }
+      return this;
+   }
+
+   public Player withBasePositions(Collection<? extends Position> value)
+   {
+      for (final Position item : value)
+      {
+         this.withBasePositions(item);
+      }
+      return this;
+   }
+
+   public Player withoutBasePositions(Position value)
+   {
+      if (this.basePositions != null && this.basePositions.remove(value))
+      {
+         value.setBasePlayer(null);
+         this.firePropertyChange(PROPERTY_BASE_POSITIONS, value, null);
+      }
+      return this;
+   }
+
+   public Player withoutBasePositions(Position... value)
+   {
+      for (final Position item : value)
+      {
+         this.withoutBasePositions(item);
+      }
+      return this;
+   }
+
+   public Player withoutBasePositions(Collection<? extends Position> value)
+   {
+      for (final Position item : value)
+      {
+         this.withoutBasePositions(item);
+      }
       return this;
    }
 
@@ -306,7 +300,7 @@ public class Player
    public void removeYou()
    {
       this.setStartingPosition(null);
-      this.withoutConesInitialPositions(new ArrayList<>(this.getConesInitialPositions()));
+      this.withoutBasePositions(new ArrayList<>(this.getBasePositions()));
       this.withoutCones(new ArrayList<>(this.getCones()));
    }
 }
