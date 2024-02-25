@@ -8,28 +8,26 @@ import de.uniks.pmws2324.ludo.service.GameService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 import static de.uniks.pmws2324.ludo.Constants.*;
 import static de.uniks.pmws2324.ludo.Constants.GAME_STATE.*;
+import static java.lang.Thread.sleep;
 
 public class IngameController extends Controller {
-    private Instant instant;
-
-    private GraphicsContext backgroundContext;
     private GraphicsContext conesContext;
     private GraphicsContext diceContext;
     private GraphicsContext uiContext;
@@ -46,13 +44,13 @@ public class IngameController extends Controller {
     @FXML
     ImageView animationsImageView;
     @FXML
-    ImageView zoomImageView;
+    Label stateLabel;
+    @FXML
+    Group playerNames;
     @FXML
     ImageView backgroundAnimationsImageView;
     @FXML
     Label infoLabel;
-    @FXML
-    TextArea informationTextArea;
     @FXML
     Button diceThrowButton;
 
@@ -69,9 +67,6 @@ public class IngameController extends Controller {
             throw new RuntimeException(e);
         }
 
-        this.instant = Instant.now();
-
-        this.backgroundContext = this.backgroundCanvas.getGraphicsContext2D();
         this.conesContext = this.conesCanvas.getGraphicsContext2D();
         this.diceContext = this.diceCanvas.getGraphicsContext2D();
         this.uiContext = this.uiCanvas.getGraphicsContext2D();
@@ -80,32 +75,22 @@ public class IngameController extends Controller {
         this.diceThrowButton.setOnMouseClicked(this::throwButtonClickedEvent);
         this.diceThrowButton.setVisible(false);
 
-        this.drawBackground();
         this.drawDices();
         this.drawPlayerRotationUI();
+        this.setPlayerNames();
 
         Thread drawConesThread = new Thread(new DrawConesThread());
         drawConesThread.start();
     }
 
+    /**
+     * Calls the {@link GameService#calculateTrowOutcome()} to throw the dice and draws new dice values on screen.
+     */
     private void throwButtonClickedEvent(MouseEvent mouseEvent) {
-        int outcome = this.gameService.calculateTrowOutcome();
-        int diceVal = this.gameService.getLastDiceValue();
-
-        switch (outcome) {
-            case 0 -> this.informationTextArea.setText("Player throws " + diceVal + "!");
-            case 1 -> this.informationTextArea.setText("One of the players already has " + diceVal + "!");
-            case 2 -> this.informationTextArea.setText("Player throws " + diceVal + " and moves again!");
-        }
+        this.gameService.calculateTrowOutcome();
         this.drawDices();
         this.drawPlayerRotationUI();
         this.diceThrowButton.setVisible(false);
-    }
-
-    private void showThrowButtonForCurrentPlayer() {
-        this.diceThrowButton.setGraphic(
-                new ImageView(DICE_THROW_BUTTON_URL + this.gameService.getCurrentPlayer().getPlayerColor() + ".png"));
-        this.diceThrowButton.setVisible(true);
     }
 
     /**
@@ -137,7 +122,7 @@ public class IngameController extends Controller {
     }
 
     /**
-     * Draws an outline around cones when mouse is hovered over them.
+     * Draws an outline around cones when mouse is hovered over.
      */
     private void mouseMovedEvent(MouseEvent mouseEvent) {
         Player current = this.gameService.getCurrentPlayer();
@@ -162,10 +147,18 @@ public class IngameController extends Controller {
         }
     }
 
-    private void drawBackground() {
-        this.backgroundContext.drawImage(INGAME_BACKGROUND_IMAGE, 0, 0);
+    /**
+     * Shows the throw button with the current player's colored dice.
+     */
+    private void showThrowButtonForCurrentPlayer() {
+        this.diceThrowButton.setGraphic(
+                new ImageView(DICE_THROW_BUTTON_URL + this.gameService.getCurrentPlayer().getPlayerColor() + ".png"));
+        this.diceThrowButton.setVisible(true);
     }
 
+    /**
+     * Draws the cones on the game board and the throw button if it is visible.
+     */
     private void drawCones() {
         this.conesContext.clearRect(0, 0, this.conesCanvas.getWidth(), this.conesCanvas.getHeight());
         GAME_STATE state = gameService.getGameState();
@@ -182,14 +175,12 @@ public class IngameController extends Controller {
 
         if (state.equals(PLAY) || state.equals(PREPARATION))
                 Platform.runLater(this::showThrowButtonForCurrentPlayer);
-
-        Platform.runLater(() -> {
-            long duration = Duration.between(this.instant, Instant.now()).toSeconds();
-            this.gameService.duration = duration;
-            this.infoLabel.setText("Time: " + duration);
-        });
+        this.stateLabel.setText(this.gameService.getGameState().toString().replace("_", " "));
     }
 
+    /**
+     * Draws a colored dice with the player's last dice value.
+     */
     private void drawDices() {
         this.diceContext.clearRect(0, 0, this.conesCanvas.getWidth(), this.conesCanvas.getHeight());
         this.gameService.getPlayers().forEach(player -> {
@@ -200,6 +191,9 @@ public class IngameController extends Controller {
         });
     }
 
+    /**
+     * Draws the current player rotation. Lights up the cone of the current player.
+     */
     private void drawPlayerRotationUI() {
         this.uiContext.clearRect(0, 0, this.conesCanvas.getWidth(), this.conesCanvas.getHeight());
         Iterator<Player> playerIterator = this.gameService.getPlayerRotation().stream().iterator();
@@ -209,29 +203,46 @@ public class IngameController extends Controller {
             Player player = playerIterator.next();
             if (player == this.gameService.getCurrentPlayer())
                 this.uiContext.drawImage(new Image(CONE_UI_SELECTED_URL + player.getPlayerColor() + ".png"),
-                        300 + i*64, 12);
+                        300 + i*64 + (192 - 64*amount), 12);
             else this.uiContext.drawImage(new Image(CONE_UI_URL + player.getPlayerColor() + ".png"),
-                    300 + i*64, 12);
+                    300 + i*64 + (192 - 64*amount), 12);
         }
-        this.uiContext.drawImage(INFO_TABLE_IMAGE, 572, 700);
     }
 
+    /**
+     * Creates a thread for playing the throw out animation.
+     */
     private void playThrowoutAnimation() {
-        Thread throwoutAnimationThread = new Thread(new AnimateBackgroundThread());
+        Thread throwoutAnimationThread = new Thread(new AnimateThrowOutThread());
         throwoutAnimationThread.start();
     }
 
     /**
-     * Support classes for playing animations in a separate thread
+     * Sets up the players' name on labels.
      */
+    private void setPlayerNames() {
+        List<Node> playerNameLabels = this.playerNames.getChildren();
+        Iterator<Player> playerIterator = this.gameService.getPlayers().iterator();
+        for (Node node : playerNameLabels) {
+            Label label = (Label) node;
+            if (playerIterator.hasNext()) label.setText(playerIterator.next().getName());
+            else label.setText("");
 
-    private class AnimateBackgroundThread implements Runnable {
+        }
+    }
+
+    // ------------------------- SUPPORT CLASSES -------------------------
+
+    /**
+     * A thread to play the throw out animation on the screen.
+     */
+    private class AnimateThrowOutThread implements Runnable {
         @Override
         public void run() {
             backgroundAnimationsImageView.setImage(new Image(THROWOUT_ANIM_URL));
             backgroundAnimationsImageView.setVisible(true);
             try {
-                Thread.sleep(3300);
+                sleep(3600);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -239,13 +250,15 @@ public class IngameController extends Controller {
         }
     }
 
+    /**
+     * A thread for drawing cones on the board and the throw button.
+     */
     private class DrawConesThread implements Runnable {
         @Override
         public void run() {
             while (!gameService.getGameState().equals(WIN)) {
-                Platform.runLater(() -> drawCones());
-                //drawCones();
-                try { Thread.sleep(100);
+                Platform.runLater(IngameController.this::drawCones);
+                try { sleep(100);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -253,29 +266,39 @@ public class IngameController extends Controller {
         }
     }
 
+    /**
+     * A thread that animates a movement of the cone. <p>
+     * Calls {@link GameService#moveCone(Cone)} to move the one step at a time. <p>
+     * After the move is finished, calls {@link GameService#checkCollisionWithEnemyCone(Cone)} to play the throw out animation,
+     * {@link GameService#checkFinalBlockedState(Cone)} to calculate new final blocked state for the player and
+     * {@link GameService#continueGame()} to pass the move to the next player.
+     */
     private class AnimateConeMovementThread implements Runnable {
         private final Position position;
         private final Cone cone;
+
         public AnimateConeMovementThread(Cone cone, Position pos) {
             this.position = pos;
             this.cone = cone;
         }
+
         @Override
         public void run() {
             int iter = gameService.getLastDiceValue();
             gameService.setGameState(PAUSE);
             this.moveCone(iter);
 
-            if (gameService.isCollidedWithEnemyCone(this.cone))
+            if (gameService.checkCollisionWithEnemyCone(this.cone))
                 playThrowoutAnimation();
 
             this.cone.setVisible(true);
             animationsImageView.setVisible(false);
 
-            gameService.checkFinalPosition(cone);
+            gameService.checkFinalBlockedState(cone);
             gameService.checkWinningConditions();
             gameService.continueGame();
         }
+
         private void moveCone(int iter) {
             this.cone.setVisible(false);
             String color = this.cone.getPlayer().getPlayerColor();
@@ -305,9 +328,9 @@ public class IngameController extends Controller {
                 animationsImageView.setVisible(true);
                 try {
                     if (iter == 1) {
-                        Thread.sleep(1200);
+                        sleep(1200);
                         animationsImageView.setVisible(false);
-                    } else Thread.sleep(750);
+                    } else sleep(750);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

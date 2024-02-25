@@ -5,7 +5,6 @@ import de.uniks.pmws2324.ludo.service.GameService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.IOException;
@@ -37,29 +36,26 @@ public class MenuController extends Controller {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.playButton.setGraphic(new ImageView(PLAY_BUTTON_URL));
-        this.rulesButton.setGraphic(new ImageView(RULES_BUTTON_URL));
-        this.quitButton.setGraphic(new ImageView(QUIT_BUTTON_URL));
+
+        this.playButton.setGraphic(PLAY_BUTTON_URL);
+        this.rulesButton.setGraphic(RULES_BUTTON_URL);
+        this.quitButton.setGraphic(QUIT_BUTTON_URL);
 
         this.playButton.setOnMouseEntered(mouseEvent ->
-            this.playButton.setGraphic(new ImageView(PLAY_BUTTON_SELECTED_URL)));
+            this.playButton.setGraphic(PLAY_BUTTON_SELECTED_URL));
         this.playButton.setOnMouseExited(mouseEvent ->
-            this.playButton.setGraphic(new ImageView(PLAY_BUTTON_URL)));
+            this.playButton.setGraphic(PLAY_BUTTON_URL));
         this.rulesButton.setOnMouseEntered(mouseEvent ->
-                this.rulesButton.setGraphic(new ImageView(RULES_BUTTON_SELECTED_URL)));
+                this.rulesButton.setGraphic(RULES_BUTTON_SELECTED_URL));
         this.rulesButton.setOnMouseExited(mouseEvent ->
-                this.rulesButton.setGraphic(new ImageView(RULES_BUTTON_URL)));
+                this.rulesButton.setGraphic(RULES_BUTTON_URL));
         this.quitButton.setOnMouseEntered(mouseEvent ->
-                this.quitButton.setGraphic(new ImageView(QUIT_BUTTON_SELECTED_URL)));
+                this.quitButton.setGraphic(QUIT_BUTTON_SELECTED_URL));
         this.quitButton.setOnMouseExited(mouseEvent ->
-                this.quitButton.setGraphic(new ImageView(QUIT_BUTTON_URL)));
+                this.quitButton.setGraphic(QUIT_BUTTON_URL));
 
         this.playButton.setOnMouseClicked(mouseEvent -> {
             this.app.changeScene(new SetupController(this.app, this.gameService), "Setup");
         });
-
-        this.backgroundImageView.setImage(new Image(MENU_BACK_ANIM));
-        this.gamenameImageView.setImage(new Image(GAMENAME_URL));
-        this.sloganImageView.setImage(new Image(SLOGAN_URL));
     }
 }

@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Group?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="839.0" prefWidth="839.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pmws2324.ludo.controller.IngameController">
    <children>
-      <Canvas fx:id="backgroundCanvas" height="840.0" width="840.0" />
+      <ImageView fitHeight="840.0" fitWidth="865.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/ui/deck_background_with_cards.png" />
+         </image>
+      </ImageView>
       <ImageView fx:id="backgroundAnimationsImageView" fitHeight="839.0" fitWidth="839.0" pickOnBounds="true" preserveRatio="true" visible="false" />
       <Canvas fx:id="conesCanvas" height="840.0" width="840.0" />
       <Canvas fx:id="diceCanvas" height="840.0" width="840.0" />
@@ -24,15 +30,82 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="diceThrowButton" layoutX="243.0" layoutY="707.0" mnemonicParsing="false" style="-fx-background-color: transparent;" />
-      <TextArea fx:id="informationTextArea" blendMode="ADD" editable="false" layoutX="606.0" layoutY="742.0" prefHeight="81.0" prefWidth="200.0" style="-fx-text-fill: #bfbfbf; -fx-background-color: transparent;" text="Throw the dice to begin!" wrapText="true">
-         <font>
-            <Font name="Bookman Old Style" size="16.0" />
-         </font>
-         <effect>
-            <DropShadow />
-         </effect>
-      </TextArea>
-      <ImageView fx:id="zoomImageView" disable="true" fitHeight="839.0" fitWidth="839.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <Button fx:id="diceThrowButton" layoutX="243.0" layoutY="707.0" mnemonicParsing="false" />
+      <Group fx:id="playerNames">
+         <children>
+            <Label fx:id="redNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="11.0" layoutY="96.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="120.0" rotate="-60.0" text="redPlayerName" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="19.0" />
+               </font>
+               <effect>
+                  <DropShadow height="62.03" radius="20.990000000000002" spread="0.72" width="23.93">
+                     <color>
+                        <Color red="1.0" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </Label>
+            <Label fx:id="blueNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="714.0" layoutY="115.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="120.0" rotate="74.0" text="bluePlayerName" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="19.0" />
+               </font>
+               <effect>
+                  <DropShadow blurType="GAUSSIAN" height="86.96" radius="44.81" spread="0.84" width="94.28">
+                     <color>
+                        <Color red="0.11184210330247879" green="0.11184210330247879" blue="0.6710526347160339" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </Label>
+            <Label fx:id="yellowNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="11.0" layoutY="628.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="120.0" rotate="-93.0" text="bluePlayerName" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="19.0" />
+               </font>
+               <effect>
+                  <DropShadow height="86.71" radius="46.825" spread="0.79" width="102.59">
+                     <color>
+                        <Color red="0.6896929740905762" green="0.7894737124443054" blue="0.12426900863647461" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </Label>
+            <Label fx:id="greenNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="707.0" layoutY="677.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="120.0" rotate="100.0" text="greenPlayerName" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="19.0" />
+               </font>
+               <effect>
+                  <DropShadow height="70.35" radius="38.3375" spread="0.77" width="85.0">
+                     <color>
+                        <Color red="0.1508771926164627" green="0.5657894611358643" blue="0.10477583110332489" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </Label>
+         </children>
+      </Group>
+      <Group fx:id="stateDisplay" layoutX="583.0" layoutY="726.0">
+         <children>
+            <ImageView fitHeight="104.0" fitWidth="262.0" layoutX="-36.0" layoutY="-4.0">
+               <image>
+                  <Image url="@../img/ui/infotable.png" />
+               </image>
+               <effect>
+                  <DropShadow height="111.38" radius="58.12" spread="0.33" width="123.1" />
+               </effect>
+            </ImageView>
+            <Label fx:id="stateLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="2.0" layoutY="38.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="CHOOSE ON FIELD" textAlignment="CENTER" textFill="RED">
+               <font>
+                  <Font name="Unispace-Bold" size="18.0" />
+               </font>
+               <effect>
+                  <DropShadow height="20.76" offsetY="3.0" radius="15.802500000000002" spread="0.38" width="44.45">
+                     <color>
+                        <Color red="0.8552631735801697" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </Label>
+         </children>
+      </Group>
    </children>
 </Pane>

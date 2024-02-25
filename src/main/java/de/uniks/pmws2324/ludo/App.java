@@ -42,9 +42,9 @@ public class App extends Application {
 
     public void initializeGame(int playerAmount) {
         this.gameService.setPlayerAmount(playerAmount);
-        //-1321092957169982059L
-        //this.gameService.setSeed(new Random().nextLong());
+        //Current seed for testing: -1321092957169982059L
 
+        //this.gameService.setSeed(new Random().nextLong());
         this.gameService.setSeed(-1321092957169982059L);
         this.gameService.setupGame();
         this.changeScene(new IngameController(this, this.gameService), "Ingame");

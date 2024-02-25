@@ -18,26 +18,23 @@ import static de.uniks.pmws2324.ludo.Constants.GAME_STATE.*;
  * A main class that contains all game logic.
  */
 public class GameService {
-    private App app;
-    public long duration;
-    private Map<String, Integer> finalBlockedState;
-    private List<Player> players;
+    private final App app;
     private int playerAmount;
-    private Iterator<Player> playerIterator;
+    private int lastDiceValue;
     private Player currentPlayer;
     private GAME_STATE gameState;
-    private Random rng = new Random();
-    private int lastDiceValue;
+    private List<Player> players;
     private List<Player> playerRotation;
+    private List<String> playerNames;
+    private Map<String, Integer> finalBlockedState;
+    private Iterator<Player> playerIterator;
+    private Random rng = new Random();
 
-    /**
-     * Constructor for the {@link GameService} class.
-     */
     public GameService(App app) {this.app = app;}
 
     public void setSeed(long seed) {
         this.rng = new Random(seed);
-        System.out.println("Seed: " + seed);
+        //System.out.println("Seed: " + seed);
     }
 
     public void setupGame() {
@@ -51,73 +48,6 @@ public class GameService {
         this.finalBlockedState.put("yellow", 44);
     }
 
-    private void setInitialPlayerRotation() {
-        this.playerRotation = this.players;
-        this.setPlayerIterator();
-        this.currentPlayer = playerIterator.next();
-    }
-
-    public int calculateTrowOutcome() {
-        this.throwDiceForPLayer(this.currentPlayer);
-        switch (this.gameState) {
-            case PREPARATION -> {
-                if (this.players.stream()
-                        .filter(player -> player.getDiceValue() != this.lastDiceValue)
-                        .toList().size() == this.playerAmount -1) {
-                    this.setNextPlayer();
-                } else return 1;
-            }
-            case PLAY -> {
-                this.calculatePlayerChoice();
-                if (this.lastDiceValue == 6)
-                    return 2;
-            }
-        }
-        return 0;
-    }
-
-    public void calculatePlayerChoice() {
-        this.setGameState(DECISION);
-
-        if (this.lastDiceValue == 6) {
-            // Decides if the player has cones on base and can move one to the start
-            if (this.currentPlayer.hasConesOnBase() && !this.currentPlayer.isStartBlockedByYourself())
-                this.setGameState(CHOOSE_ON_BASE);
-            else if (this.currentPlayer.hasConesOnField() && this.someConesCanMove())
-                this.setGameState(CHOOSE_ON_FIELD);
-        } else if (this.currentPlayer.hasConesOnField() && this.someConesCanMove())
-            this.setGameState(CHOOSE_ON_FIELD);
-
-        if (this.gameState.equals(DECISION))
-            continueGame();
-    }
-
-    /**
-     * Continues the game.
-     * If the last player has rolled a 6, he can make another throw.
-     */
-    public void continueGame() {
-        if (this.lastDiceValue < 6 || !this.someConesCanMove())
-            this.setNextPlayer();
-        this.setGameState(PLAY);
-    }
-
-    public void throwOut(Cone cone) {
-        cone.getPlayer().getConesInitialPositions().stream()
-                .filter(position -> Objects.isNull(position.getCone()))
-                .findFirst().ifPresent(cone::setPosition);
-    }
-
-    public void sortPlayerRotation() {
-        this.playerRotation = this.playerRotation.stream()
-                .sorted(Comparator.comparing(Player::getDiceValue).reversed())
-                .toList();
-    }
-
-    private void setPlayerIterator() {
-        this.playerIterator = playerRotation.iterator();
-    }
-
     /**
      * For each player, sets up the initial positions of the cones on the player base
      * (4 circles on the base) with starting positions (4 colored circles on the game field),
@@ -125,18 +55,20 @@ public class GameService {
      */
     private void playersSetup() {
         List<Player> playerBatch =  Stream.of(
-                new Player().setPlayerColor(PLAYER_COLOR_RED),
-                new Player().setPlayerColor(PLAYER_COLOR_BLUE),
-                new Player().setPlayerColor(PLAYER_COLOR_GREEN),
-                new Player().setPlayerColor(PLAYER_COLOR_YELLOW))
+                        new Player().setPlayerColor(PLAYER_COLOR_RED),
+                        new Player().setPlayerColor(PLAYER_COLOR_BLUE),
+                        new Player().setPlayerColor(PLAYER_COLOR_GREEN),
+                        new Player().setPlayerColor(PLAYER_COLOR_YELLOW))
                 .map(this::setInitialDiceValue)
                 .map(this::assignConesInitialPosition)
                 .map(this::assignCones).toList();
         Iterator<Player> playerIterator = playerBatch.iterator();
+        Iterator<String> playerNamesIterator = this.playerNames.iterator();
         int amount = this.playerAmount;
         this.players = new ArrayList<>();
         while (amount != 0) {
-            this.players.add(playerIterator.next());
+            this.players.add(playerIterator.next()
+                    .setName(playerNamesIterator.next()));
             amount--;
         }
     }
@@ -217,19 +149,103 @@ public class GameService {
         this.playerAmount = playerAmount;
     }
 
+    /**
+     * Sets players' initial rotation (red-blue-green-yellow by default) before they threw their dices.
+     */
+    private void setInitialPlayerRotation() {
+        this.playerRotation = this.players;
+        this.setPlayerIterator();
+        this.currentPlayer = playerIterator.next();
+    }
+
+    /**
+     * Sorts players' rotation after everyone threw their dice.
+     */
+    public void sortPlayerRotation() {
+        this.playerRotation = this.playerRotation.stream()
+                .sorted(Comparator.comparing(Player::getDiceValue).reversed())
+                .toList();
+    }
+
+    private void setPlayerIterator() {
+        this.playerIterator = playerRotation.iterator();
+    }
+
+    /**
+     * Checks what should be done with the result of the dice roll.
+     */
+    public void calculateTrowOutcome() {
+        this.throwDiceForPLayer(this.currentPlayer);
+        switch (this.gameState) {
+            case PREPARATION -> {
+                if (this.players.stream()
+                        .filter(player -> player.getDiceValue() != this.lastDiceValue)
+                        .toList().size() == this.playerAmount -1)
+                    this.setNextPlayer();
+            }
+            case PLAY -> this.calculatePlayerChoice();
+        }
+    }
+
+    public void calculatePlayerChoice() {
+        this.setGameState(DECISION);
+
+        if (this.lastDiceValue == 6) {
+            // Decides if the player has cones on base and can move one to the start
+            if (this.currentPlayer.hasConesOnBase() && !this.currentPlayer.isStartBlockedByYourself())
+                this.setGameState(CHOOSE_ON_BASE);
+            else if (this.currentPlayer.hasConesOnField() && this.someConesCanMove())
+                this.setGameState(CHOOSE_ON_FIELD);
+        } else if (this.currentPlayer.hasConesOnField() && this.someConesCanMove())
+            this.setGameState(CHOOSE_ON_FIELD);
+
+        if (this.gameState.equals(DECISION))
+            continueGame();
+    }
+
+    /**
+     * Continues the game.
+     * If the last player has rolled a 6, he can make another throw.
+     */
+    public void continueGame() {
+        if (this.lastDiceValue < 6 || !this.someConesCanMove())
+            this.setNextPlayer();
+        this.setGameState(PLAY);
+    }
+
+    public void setNextPlayer() {
+        if (!this.playerIterator.hasNext()) {
+            if (this.gameState.equals(PREPARATION)) {
+                this.sortPlayerRotation();
+                this.setGameState(PLAY);
+                this.lastDiceValue = -1;
+            }
+            this.setPlayerIterator();
+        }
+        this.currentPlayer = this.playerIterator.next();
+    }
+
+    /**
+     * Removes cone from the field and returns it to the base.
+     */
+    public void throwOut(Cone cone) {
+        cone.getPlayer().getConesInitialPositions().stream()
+                .filter(position -> Objects.isNull(position.getCone()))
+                .findFirst().ifPresent(cone::setPosition);
+    }
+
+    /**
+     * Moves cone to the player's starting position. Creates a special position, that will be used to calculate
+     * the behaviour of cone on the game field. If this cone hits an enemy cone on the start, kicks it to base and
+     * returns true for the {@link IngameController} to play the throw out animation.
+     */
     public boolean moveConeToStartingPosition(Cone cone) {
         AtomicBoolean outcome = new AtomicBoolean(false);
-
-        // Describes the case of another player's cone blocking the starting position of the player.
-        // If true, returns the tile obstructing cone back to the corresponding player's base.
         this.getEnemyCones().stream()
                 .filter(another -> !another.getPlayer().getConesInitialPositions().contains(another.getPosition()))
                 .filter(another -> another.getPosition().getGlobalState()
                         == this.currentPlayer.getStartingPosition().getGlobalState())
                 .findFirst().ifPresent(another -> {
-                    another.setReadyForFinishing(false);
-                    another.setMovable(true);
-
                     this.throwOut(another);
                      outcome.set(true);
                 });
@@ -240,12 +256,33 @@ public class GameService {
         return outcome.get();
     }
 
+    /**
+     * Checks if some of the current's player cones on field are able to make a move.
+     */
+
     public boolean someConesCanMove() {
         return this.currentPlayer.getConesOnField().stream()
                 .anyMatch(this::isConeMovable);
     }
 
-    public void checkFinalPosition(Cone cone) {
+    /**
+     * Checks if the cone can be placed on one of the final positions.
+     */
+    public boolean checkConeCanMoveToEnd(Cone cone) {
+        int localState = cone.getPosition().getLocalState();
+        int calculated = localState + this.getLastDiceValue();
+        String color = cone.getPlayer().getPlayerColor();
+
+        return  localState < 34
+                || calculated <= 39
+                || calculated < this.finalBlockedState.get(color)
+                || localState >= this.finalBlockedState.get(color) && calculated < 44;
+    }
+
+    /**
+     * Checks if the final blocked state needs to be changed when cones move on the final fields.
+     */
+    public void checkFinalBlockedState(Cone cone) {
         int localState = cone.getPosition().getLocalState();
         String color = cone.getPlayer().getPlayerColor();
 
@@ -261,36 +298,56 @@ public class GameService {
 
     }
 
+    /**
+     * Changes final blocked state to cone's current local state.
+     */
     private void changeFinalBlockedState(Cone cone) {
         this.finalBlockedState.replace(cone.getPlayer().getPlayerColor(), cone.getPosition().getLocalState());
     }
 
-    public boolean checkConeCanMoveToEnd(Cone cone) {
-        int localState = cone.getPosition().getLocalState();
-        int calculated = localState + this.getLastDiceValue();
-        String color = cone.getPlayer().getPlayerColor();
-
-        return  localState < 34
-                || calculated <= 39
-                || calculated < this.finalBlockedState.get(color)
-                || localState >= this.finalBlockedState.get(color) && calculated < 44;
-    }
-
-    public boolean willCollideWithFriendlyCone(Cone cone) {
+    /**
+     * Checks if the cone will collide with player's other cone after the move is finished.
+     */
+    public boolean checkCollisionWithFriendlyCone(Cone cone) {
         return this.getCurrentPlayer().getConesOnField().stream()
                 .filter(another -> !Objects.equals(another, cone))
                 .anyMatch(another ->
                         another.getPosition().getLocalState() == cone.getPosition().getLocalState() + this.lastDiceValue);
     }
 
+    /**
+     * Checks if the cone will collide with an enemy cone after the move is finished.
+     */
+    public boolean checkCollisionWithEnemyCone(Cone cone) {
+        AtomicBoolean toReturn = new AtomicBoolean(false);
+        this.getEnemyCones().stream()
+                .filter(another -> !another.getPlayer().getConesInitialPositions().contains(another.getPosition()))
+                .filter(another -> another.getPosition().getGlobalState() != -1 && another.getPosition().getGlobalState()
+                        == cone.getPosition().getGlobalState())
+                .findFirst().ifPresent(another -> {
+                    this.throwOut(another);
+                    toReturn.set(true);
+                });
+        return toReturn.get();
+    }
+
+    /**
+     * Checks if all the current player's cones are standing on the final fields.
+     */
     public void checkWinningConditions() {
          if (this.currentPlayer.getCones().stream()
-                 .allMatch(cone -> cone.getPosition().getLocalState() > 39)) {
+                 .map(Cone::getPosition)
+                 .map(Position::getLocalState)
+                 .allMatch(state -> state > 39)) {
              this.setGameState(WIN);
              this.app.changeScene(new MenuController(this.app, this), "Menu");
          }
     }
 
+    /**
+     * Moves cone one step further. Changes local and global states of the cone's position for calculations.
+     * Changes the coordinates of position, so it could be drawn on the screen in the correct place.
+     */
     public void moveCone(Cone cone) {
         Position pos = cone.getPosition();
 
@@ -322,6 +379,9 @@ public class GameService {
         this.setConeMovingDirection(cone);
     }
 
+    /**
+     * Supportive method for {@link #moveCone(Cone)}, changes the moving direction of the cone's position.
+     */
     private void setConeMovingDirection(Cone cone) {
         switch (cone.getPosition().getGlobalState()) {
             case 0, 8, 14 -> cone.setMovingDirection(CONE_DIRECTION_RIGHT);
@@ -331,38 +391,35 @@ public class GameService {
         }
     }
 
-    public boolean isCollidedWithEnemyCone(Cone cone) {
-        //TODO: find a better replacement for this atomic boolean
-        //Update: I can't.
-        AtomicBoolean toReturn = new AtomicBoolean(false);
-        this.getEnemyCones().stream()
-                .filter(another -> !another.getPlayer().getConesInitialPositions().contains(another.getPosition()))
-                .filter(another -> another.getPosition().getGlobalState() != -1 && another.getPosition().getGlobalState()
-                        == cone.getPosition().getGlobalState())
-                .findFirst().ifPresent(another -> {
-                    this.throwOut(another);
-                    toReturn.set(true);
-                });
-        return toReturn.get();
-    }
-
+    /**
+     * Checks if the cone can be moved.
+     */
     public boolean isConeMovable(Cone cone) {
-        return (this.isJustPlacedCone(cone) && this.isConeJustPlacedAndMovable())
-                || (this.checkConeCanMoveToEnd(cone) && !this.willCollideWithFriendlyCone(cone)
+        return (this.isConeJustPlaced(cone) && this.isConeJustPlacedAndMovable())
+                || (this.checkConeCanMoveToEnd(cone) && !this.checkCollisionWithFriendlyCone(cone)
                             && !this.isConeJustPlacedAndMovable());
     }
 
-    private boolean isJustPlacedCone(Cone cone) {
+    /**
+     * Checks if the selected cone was just placed on the starting position.
+     */
+    private boolean isConeJustPlaced(Cone cone) {
         return cone.getPosition().getLocalState() == 0;
     }
 
+    /**
+     * Checks if a cone was placed on the starting position and it can be moved.
+     */
     private boolean isConeJustPlacedAndMovable() {
         Optional<Cone> justPlaced = this.currentPlayer.getCones().stream()
-                .filter(this::isJustPlacedCone)
+                .filter(this::isConeJustPlaced)
                 .findFirst();
-        return justPlaced.isPresent() && !this.willCollideWithFriendlyCone(justPlaced.get());
+        return justPlaced.isPresent() && !this.checkCollisionWithFriendlyCone(justPlaced.get());
     }
 
+    /**
+     * Returns a list of cones that belong to other players.
+     */
     private List<Cone> getEnemyCones() {
         return this.players.stream()
                 .filter(player -> !player.getPlayerColor().equals(this.currentPlayer.getPlayerColor()))
@@ -381,18 +438,6 @@ public class GameService {
         return this.currentPlayer;
     }
 
-    public void setNextPlayer() {
-        if (!this.playerIterator.hasNext()) {
-            if (this.gameState.equals(PREPARATION)) {
-                this.sortPlayerRotation();
-                this.setGameState(PLAY);
-                this.lastDiceValue = -1;
-            }
-            this.setPlayerIterator();
-        }
-        this.currentPlayer = this.playerIterator.next();
-    }
-
     public void setGameState(GAME_STATE state) {
             this.gameState = state;
     }
@@ -401,9 +446,9 @@ public class GameService {
         return this.gameState;
     }
 
-    public int throwDice(int num) {
-        this.lastDiceValue = num;
-        return num;
+    public int throwDice(int predicted) {
+        this.lastDiceValue = predicted;
+        return predicted;
     }
 
     public int throwDice() {
@@ -416,14 +461,12 @@ public class GameService {
         return player;
     }
 
-    public Player throwDiceForPLayer(Player player) {
+    public void throwDiceForPLayer(Player player) {
         player.setDiceValue(this.throwDice());
-        return player;
     }
 
-    public Player throwDiceForPLayer(Player player, int predicted) {
+    public void throwDiceForPLayer(Player player, int predicted) {
         player.setDiceValue(this.throwDice(predicted));
-        return player;
     }
 
     public int getLastDiceValue() {
@@ -432,6 +475,10 @@ public class GameService {
 
     public List<Player> getPlayerRotation() {
         return playerRotation;
+    }
+
+    public void setPlayerNames(List<String> playerNames) {
+        this.playerNames = playerNames;
     }
 
     public int getFinalBlockedState(Player player) {
@@ -450,26 +497,26 @@ public class GameService {
 
     /**
      * Replicates the behavior of AnimateConeMovementThread inside the {@link IngameController},
-     * which calls {@link GameService#moveCone(Cone)} and {@link GameService#isCollidedWithEnemyCone(Cone)}.
+     * which calls {@link GameService#moveCone(Cone)} and {@link GameService#checkCollisionWithEnemyCone(Cone)}.
      *  Uses local states (between friendly cones) to check the movement.
      */
     public void simulateConeStepsLocal(Cone cone, int stepsTo) {
         Position initial = cone.getPosition();
         while (initial.getLocalState() != stepsTo)
             this.moveCone(cone);
-        this.checkFinalPosition(cone);
+        this.checkFinalBlockedState(cone);
     }
 
     /**
      * Replicates the behavior of AnimateConeMovementThread inside the {@link IngameController},
-     * which calls {@link GameService#moveCone(Cone)} and {@link GameService#isCollidedWithEnemyCone(Cone)}.
+     * which calls {@link GameService#moveCone(Cone)} and {@link GameService#checkCollisionWithEnemyCone(Cone)}.
      * Uses global states (between all cones on board) to check the movement.
      */
     public void simulateConeStepsGlobal(Cone cone, int stepsTo) {
         Position initial = cone.getPosition();
         while (initial.getGlobalState() != stepsTo)
             this.moveCone(cone);
-        this.isCollidedWithEnemyCone(cone);
+        this.checkCollisionWithEnemyCone(cone);
     }
 
     /**

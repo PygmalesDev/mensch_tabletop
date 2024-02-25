@@ -72,8 +72,6 @@ public class SetupController extends Controller {
         this.playerSigns.get(2).setVisible(false);
         this.playerSigns.get(3).setVisible(false);
 
-        this.leftButton.setGraphic(new ImageView(SETUP_ARROW_LEFT_URL));
-        this.rightButton.setGraphic(new ImageView(SETUP_ARROW_RIGHT_URL));
         this.leftButton.setVisible(false);
 
         this.leftButton.setOnMouseClicked(mouseEvent -> {
@@ -89,13 +87,11 @@ public class SetupController extends Controller {
         this.beginButton.setGraphic(SETUP_BEGIN_BUTTON_INACTIVE);
         this.beginButton.setOnMouseClicked(mouseEvent -> {
             if (!this.beginButton.isDisabled()) {
+                this.gameService.setPlayerNames(this.getPlayerNicknames());
                 this.app.initializeGame(this.playerAmount);
             }
         });
         this.beginButton.setDisable(true);
-
-        this.backgroundImageView.setImage(new Image(MENU_BACK_ANIM));
-        this.whosplayingImageView.setImage(new Image(WHOSPLAYING_URL));
 
         Thread conditionsThread = new Thread(new ConditionsThread());
         conditionsThread.start();
@@ -120,10 +116,9 @@ public class SetupController extends Controller {
     }
 
     private class ConditionsThread implements Runnable {
-
         @Override
         public void run() {
-            while (true) {
+            while (app.getSceneTitle().equals("Setup")) {
                 List<String> enteredNicknames = getPlayerNicknames();
                 Platform.runLater(() -> {
                     if (enteredNicknames.size() == playerAmount) {
