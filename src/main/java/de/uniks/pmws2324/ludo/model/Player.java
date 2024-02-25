@@ -13,13 +13,55 @@ public class Player
    public static final String PROPERTY_PLAYER_COLOR = "playerColor";
    public static final String PROPERTY_STARTING_POSITION = "startingPosition";
    public static final String PROPERTY_CONES_INITIAL_POSITIONS = "conesInitialPositions";
+   public static final String PROPERTY_DICE_VALUE = "diceValue";
    private String name;
    private List<Cone> cones;
    protected PropertyChangeSupport listeners;
    private String playerColor;
    private Position startingPosition;
    private List<Position> conesInitialPositions;
+   private int diceValue;
 
+   // --------------------- CUSTOM METHODS ---------------------
+   /**
+    * Checks if the player has any cones left on his base.
+    */
+   public boolean hasConesOnBase() {
+     return this.conesInitialPositions.stream()
+             .filter(Position::hasCone)
+             .toList().size() > 0;
+   }
+
+   /**
+    * Checks if the player has a cone standing on the field.
+    */
+   public boolean hasConesOnField() {
+      return this.cones.stream()
+              .filter(cone -> !this.conesInitialPositions.contains(cone.getPosition()))
+              .toList().size() > 0;
+   }
+
+   public List<Cone> getConesOnBase() {
+      return this.conesInitialPositions.stream()
+              .filter(Position::hasCone)
+              .map(Position::getCone)
+              .toList();
+   }
+
+   public List<Cone> getConesOnField() {
+      return this.cones.stream()
+              .filter(cone -> !this.conesInitialPositions.contains(cone.getPosition()))
+              .toList();
+   }
+
+   public boolean isStartBlockedByYourself() {
+      return this.cones.stream()
+              .map(Cone::getPosition)
+              .map(Position::getLocalState)
+              .anyMatch(state -> state == 0);
+   }
+
+   // ------------------- GENERATED METHODS --------------------
    public String getName()
    {
       return this.name;
@@ -212,6 +254,24 @@ public class Player
       {
          this.withoutConesInitialPositions(item);
       }
+      return this;
+   }
+
+   public int getDiceValue()
+   {
+      return this.diceValue;
+   }
+
+   public Player setDiceValue(int value)
+   {
+      if (value == this.diceValue)
+      {
+         return this;
+      }
+
+      final int oldValue = this.diceValue;
+      this.diceValue = value;
+      this.firePropertyChange(PROPERTY_DICE_VALUE, oldValue, value);
       return this;
    }
 

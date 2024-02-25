@@ -13,45 +13,79 @@ public class Cone
    public static final String PROPERTY_COLOR = "color";
    public static final String PROPERTY_MOVING_DIRECTION = "movingDirection";
    public static final String PROPERTY_VISIBLE = "visible";
-   public static final String PROPERTY_CONDITION = "condition";
+   public static final String PROPERTY_MOVABLE = "movable";
+   public static final String PROPERTY_READY_FOR_FINISHING = "readyForFinishing";
    private Position position;
    private Player player;
    protected PropertyChangeSupport listeners;
    private String color;
    private String movingDirection;
    private boolean visible;
-   private Image image;
-   private String condition;
+   private Image imgNormal;
+   private Image imgSelected;
+   private Image imgCurrent;
+   private boolean movable;
+   private boolean readyForFinishing;
 
-   public Cone setImage() {
-      switch (this.color) {
-         case PLAYER_COLOR_RED -> this.image = RED_CONE_IMAGE;
-         case PLAYER_COLOR_BLUE -> this.image = BLUE_CONE_IMAGE;
-         case PLAYER_COLOR_YELLOW -> this.image = YELLOW_CONE_IMAGE;
-         case PLAYER_COLOR_GREEN -> this.image = GREEN_CONE_IMAGE;
+   // --------------------- CUSTOM METHODS ---------------------
+
+   public Cone loadImageNormal() {
+      this.imgNormal = new Image(CONE_IMG + this.color + ".png");
+      return this;
+   }
+
+   public Cone loadImageSelected() {
+      this.imgSelected = new Image(CONE_IMG_SELECTED + this.color + ".png");
+      return this;
+   }
+
+   public Image getCurrentImage() {
+      return this.imgCurrent;
+   }
+
+   public Cone setCurrentImage(String variant) {
+      if (variant.equals("NORMAL"))
+         this.imgCurrent = this.imgNormal;
+      if (variant.equals("SELECTED"))
+         this.imgCurrent = this.imgSelected;
+      return this;
+   }
+
+   // ------------------- GENERATED METHODS --------------------
+   public boolean isReadyForFinishing()
+   {
+      return this.readyForFinishing;
+   }
+
+   public Cone setReadyForFinishing(boolean value)
+   {
+      if (value == this.readyForFinishing)
+      {
+         return this;
       }
+
+      final boolean oldValue = this.readyForFinishing;
+      this.readyForFinishing = value;
+      this.firePropertyChange(PROPERTY_READY_FOR_FINISHING, oldValue, value);
       return this;
    }
 
-   public Cone setImage(String condition) {
-      if (condition.equals(CONDITION_SELECTED)) {
-         switch (this.color) {
-            case PLAYER_COLOR_RED -> this.image = RED_CONE_IMAGE_SELECTED;
-            case PLAYER_COLOR_BLUE -> this.image = BLUE_CONE_IMAGE_SELECTED;
-            case PLAYER_COLOR_YELLOW -> this.image = YELLOW_CONE_IMAGE_SELECTED;
-            case PLAYER_COLOR_GREEN -> this.image = GREEN_CONE_IMAGE_SELECTED;
-         }
+   public boolean isMovable()
+   {
+      return this.movable;
+   }
+
+   public Cone setMovable(boolean value)
+   {
+      if (value == this.movable)
+      {
+         return this;
       }
-      return this;
-   }
 
-   public Cone setImage(Image image) {
-      this.image = image;
+      final boolean oldValue = this.movable;
+      this.movable = value;
+      this.firePropertyChange(PROPERTY_MOVABLE, oldValue, value);
       return this;
-   }
-
-   public Image getImage() {
-      return image;
    }
 
    public Position getPosition()
@@ -162,24 +196,6 @@ public class Cone
       return this;
    }
 
-   public String getCondition()
-   {
-      return this.condition;
-   }
-
-   public Cone setCondition(String value)
-   {
-      if (Objects.equals(value, this.condition))
-      {
-         return this;
-      }
-
-      final String oldValue = this.condition;
-      this.condition = value;
-      this.firePropertyChange(PROPERTY_CONDITION, oldValue, value);
-      return this;
-   }
-
    public boolean firePropertyChange(String propertyName, Object oldValue, Object newValue)
    {
       if (this.listeners != null)
@@ -211,7 +227,6 @@ public class Cone
       final StringBuilder result = new StringBuilder();
       result.append(' ').append(this.getColor());
       result.append(' ').append(this.getMovingDirection());
-      result.append(' ').append(this.getCondition());
       return result.substring(1);
    }
 }

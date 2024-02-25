@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane fx:id="signControl" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="245.0" prefWidth="395.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.pmws2324.ludo.controller.PlayerSignSubController">
+   <children>
+      <ImageView fx:id="backgroundImageView" fitHeight="245.0" fitWidth="395.0" pickOnBounds="true" preserveRatio="true" />
+      <TextField fx:id="playerNameField" layoutX="41.0" layoutY="109.0" prefHeight="46.0" prefWidth="176.0" promptText="Enter Name">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </TextField>
+   </children>
+</Pane>

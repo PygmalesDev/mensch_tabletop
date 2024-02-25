@@ -16,7 +16,7 @@
   roles: 	position_cone 	position_player 	position_initialPlayer
 
 - cone: 	org.fulib.classmodel.Clazz
-  attributes: 	cone_color 	cone_movingDirection 	cone_condition 	cone_visible
+  attributes: 	cone_color 	cone_movingDirection 	cone_movable 	cone_visible 	cone_readyForFinishing
   model: 	c
   modified: 	false
   name: 	Cone
@@ -24,7 +24,7 @@
   roles: 	cone_position 	cone_player
 
 - player: 	org.fulib.classmodel.Clazz
-  attributes: 	player_name 	player_playerColor
+  attributes: 	player_name 	player_playerColor 	player_diceValue
   model: 	c
   modified: 	false
   name: 	Player
@@ -131,20 +131,29 @@
   type: 	String
   typeSignature: 	String
 
-- cone_condition: 	org.fulib.classmodel.Attribute
+- cone_movable: 	org.fulib.classmodel.Attribute
   clazz: 	cone
-  id: 	Cone_condition
+  id: 	Cone_movable
   modified: 	false
-  name: 	condition
+  name: 	movable
   propertyStyle: 	Bean
-  type: 	String
-  typeSignature: 	String
+  type: 	boolean
+  typeSignature: 	boolean
 
 - cone_visible: 	org.fulib.classmodel.Attribute
   clazz: 	cone
   id: 	Cone_visible
   modified: 	false
   name: 	visible
+  propertyStyle: 	Bean
+  type: 	boolean
+  typeSignature: 	boolean
+
+- cone_readyForFinishing: 	org.fulib.classmodel.Attribute
+  clazz: 	cone
+  id: 	Cone_readyForFinishing
+  modified: 	false
+  name: 	readyForFinishing
   propertyStyle: 	Bean
   type: 	boolean
   typeSignature: 	boolean
@@ -186,6 +195,15 @@
   propertyStyle: 	Bean
   type: 	String
   typeSignature: 	String
+
+- player_diceValue: 	org.fulib.classmodel.Attribute
+  clazz: 	player
+  id: 	Player_diceValue
+  modified: 	false
+  name: 	diceValue
+  propertyStyle: 	Bean
+  type: 	int
+  typeSignature: 	int
 
 - player_startingPosition: 	org.fulib.classmodel.AssocRole
   aggregation: 	false

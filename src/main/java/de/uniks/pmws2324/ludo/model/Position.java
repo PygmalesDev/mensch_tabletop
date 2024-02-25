@@ -25,6 +25,10 @@ public class Position
    private Player player;
    private Player initialPlayer;
 
+   public boolean hasCone() {
+      return !Objects.isNull(this.cone);
+   }
+
    public Position clone() {
       return new Position()
               .setX(x).setY(y)

@@ -10,6 +10,7 @@ public class GenModel implements ClassModelDecorator {
     class Player {
         String name;
         String playerColor;
+        int diceValue;
         @Link("player")
         List<Cone> cones;
         @Link("player")
@@ -20,8 +21,9 @@ public class GenModel implements ClassModelDecorator {
     class Cone {
         String color;
         String movingDirection;
-        String condition;
+        boolean movable;
         boolean visible;
+        boolean readyForFinishing;
         @Link("cones")
         Player player;
         @Link("cone")
